@@ -1,5 +1,5 @@
 source("init.R")
-folders<-c("~/Pictures/2014", "~/Pictures/2015")
+folders<-c("/Volumes/Pictures/2012", "/Volumes/Pictures/2013", "~/Pictures/2014", "~/Pictures/2015")
 for (f in folders) {
   print(f)
   outFilename <- paste0("data", "/", basename(f), ".csv")
