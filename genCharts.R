@@ -1,21 +1,24 @@
 source("init.R")
 
-data <- data.frame()
-setClass('toDate')
-setAs("character", "toDate", function(from) {
-     as.POSIXct(from, format = "%Y:%m:%d %H:%M:%S")
-})
+data <- readRDS("data.rds")
 
-for (f in list.files("data", full.names = TRUE)) {
-    print(f)
-    data <- rbind(data, read.csv(f, 
-                                 colClasses = c("character", "factor", "toDate", "factor", "factor", "factor", "factor"), 
-                                 na.strings = c("", " ", "0.0 mm")))
-}
+q <- ggplot(data, aes(FocalLength)) + 
+    geom_histogram(aes(fill = LensModel), binwidth = 1) +
+    theme(legend.position = "top") +
+    labs(title = "Photos by Focal Length")
 
-print(summary(data))
-
-q <- ggplot(data, aes(FocalLength))
-q <- q + geom_histogram()
 print(q)
+dev.copy(png, width = 800, height = 600, "FocalLength.png")
+dev.off()
 
+byYear <- data %>%
+    group_by(year = year(CreateDate)) %>%
+    summarise(count = n())
+
+
+q <- ggplot(byYear, aes(x = year, y = count)) +
+    geom_bar(stat = "identity") +
+    labs(title = "Photos by Year")
+print(q)
+dev.copy(png, width = 800, height = 600, "Year.png")
+dev.off()
