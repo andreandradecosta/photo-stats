@@ -1,0 +1,39 @@
+---
+title: "My Photo Stats"
+author: "Andre Andrade Costa"
+---
+
+
+```{r init, echo=FALSE, results='hide'}
+source("init.R")
+```
+
+Load the already cleaned data
+```{r readData}
+data <- readRDS("data.rds")
+summary(data)
+nrow(data)
+```
+
+Histogram of pictures by focal length:
+
+```{r plotFocalLength}
+ggplot(data, aes(FocalLength)) + 
+    geom_histogram(aes(fill = LensModel), binwidth = 1) +
+    theme(legend.position = "top") +
+    labs(title = "Photos by Focal Length")
+
+
+```
+
+Bar plot of pictures by year
+
+```{r plotYear}
+byYear <- data %>%
+    group_by(year = year(CreateDate)) %>%
+    summarise(count = n())
+
+ggplot(byYear, aes(x = year, y = count)) +
+    geom_bar(stat = "identity") +
+    labs(title = "Photos by Year")
+```
